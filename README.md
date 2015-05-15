@@ -13,4 +13,5 @@ To be added
 To be added
 
 ### How to use
-bin/nlife
+        $ gem install nlife
+        $ nlife
