@@ -1,10 +1,10 @@
 require 'curses'
 
-require_relative "./game.rb"
+require_relative 'game.rb'
 
 module NLife
   class UI
-    RENDER_DEAD = " "
+    RENDER_DEAD = ' '
     RENDER_LIVE = "\u2588"
 
     def initialize
@@ -20,7 +20,7 @@ module NLife
       @window_lines = Curses.lines
       @window_cols = Curses.cols
       @window = Curses::Window.new(@window_lines, @window_cols, 0, 0)
-      @window.box("|", "-")
+      @window.box('|', '-')
       @window.timeout = 0
     end
 
@@ -45,22 +45,20 @@ module NLife
 
     def dispatch_key(key)
       case key
-      when "p" then @pause = !@pause
-      when "s" then @life.seed
-      when "q" then return false
+      when 'p' then @pause = !@pause
+      when 's' then @life.seed
+      when 'q' then return false
       end
-      return true
+      true
     end
 
     def step
-      unless @pause
-        @life.step
-      end
+      @life.step unless @pause
     end
 
     def render
       @life.rows.times do |i|
-        string = ""
+        string = ''
         @life.cols.times do |j|
           string += @life.state[j, i] > 0 ? RENDER_LIVE : RENDER_DEAD
         end

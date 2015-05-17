@@ -1,30 +1,31 @@
-require "narray"
-require "numru/fftw3"
+require 'narray'
+require 'numru/fftw3'
 include NumRu
 
-require_relative "./helper.rb"
+require_relative 'helper.rb'
 
 module NLife
+  # encapsulates game logic
   class Game
     attr_reader :state
-    attr_accessor :density
+    attr_reader :density
 
     def initialize(rows, cols, surround = nil, rule = nil)
-      @state = NArray.int(cols, rows)
-      @density = NArray.int(cols, rows)
+      @state = NArray.float(cols, rows)
+      @density = NArray.float(cols, rows)
       surround ||= default_surround(rows, cols)
-      @t_surround = FFTW3.fft(surround.to_f, -1) / surround.size
+      @fft_surround = FFTW3.fft(surround.to_f, -1) / surround.size
       @rule = rule || default_rule
     end
 
     def default_surround(rows, cols)
-      return Helper.surround_from_block(rows, cols) do |row, col|
-        [row.abs, col.abs].max == 1
+      Helper.surround_from_block(rows, cols) do |row, col|
+        [row.abs, col.abs].max == 1 ? 1 : 0
       end
     end
 
     def default_rule
-      return Helper.rule_from_golly("B3/S23")
+      Helper.rule_from_golly('B3/S23')
     end
 
     def seed
@@ -35,14 +36,16 @@ module NLife
       end
     end
 
-    def step
-      calc_density
-      calc_next_state
+    def step(count = 1)
+      count.times do
+        calc_density
+        calc_next_state
+      end
     end
 
     def calc_density
       t_state = FFTW3.fft(@state, -1)
-      t_density = t_state * @t_surround
+      t_density = t_state * @fft_surround
       @density = FFTW3.fft(t_density, 1).real.round
     end
 
@@ -56,11 +59,20 @@ module NLife
 
     # use for debug only
     def print
-      puts "#" * (@state.shape[0] + 2)
+      puts '#' * (@state.shape[0] + 2)
       @state.shape[1].times do |i|
-        puts "#" + @state[true, i].each.map { |e| e > 0 ? "*" : " " }.join + "#"
+        print_row(i)
       end
-      puts "#" * (@state.shape[0] + 2)
+      puts '#' * (@state.shape[0] + 2)
+    end
+
+    # use for debug only
+    def print_row(row)
+      puts '#' + @state[true, row].each.map { |e| e > 0 ? '*' : ' ' }.join + '#'
+    end
+
+    def surround
+      FFTW3.fft(@fft_surround, 1).real
     end
 
     def rows
@@ -70,5 +82,5 @@ module NLife
     def cols
       @state.shape[0]
     end
-  end
-end
+  end # class Game
+end # module NLife

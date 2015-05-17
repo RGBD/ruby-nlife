@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
 
-require_relative "../lib/nlife"
+require_relative '../lib/nlife'
 
 NLife::UI.new.start

@@ -1,14 +1,15 @@
 TODO
 ====
 
-### Tests
-- add rspec tests
-
 ### Game features
 - resizing grid
 - load/save file
 - set cell state
 - yank/paste/clear region
+- set speed
+- status line showing:
+  - iteration
+  - speed
 
 ### Render features
 - make render a separate class
