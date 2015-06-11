@@ -28,6 +28,14 @@ module NLife
       Helper.rule_from_golly('B3/S23')
     end
 
+    def reset
+      @state.shape[1].times do |row|
+        @state.shape[0].times do |col|
+          @state[col, row] = 0.0
+        end
+      end
+    end
+
     def seed
       @state.shape[1].times do |row|
         @state.shape[0].times do |col|

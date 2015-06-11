@@ -1,5 +1,8 @@
 # Change log
 
+##0.2.0
+- add method reset for NLife::Game
+
 ##0.1.0
 - tests added
 - helper rule_from_golly modified
